@@ -118,15 +118,21 @@ function setToxicityInformationProfile(element) {
 setToxicityInformationHome(document);
 setToxicityInformationProfile(document);
 
-document
-    .querySelector('[aria-labelledby="accessible-list-0"]')
-    .addEventListener("DOMNodeInserted", function (event) {
-        setToxicityInformationHome(event.target);
-        setToxicityInformationProfile(event.target);
-    });
+if (document
+    .querySelector('[aria-labelledby="accessible-list-0"]')) {
+    document
+        .querySelector('[aria-labelledby="accessible-list-0"]')
+        .addEventListener("DOMNodeInserted", function (event) {
+            setToxicityInformationHome(event.target);
+            setToxicityInformationProfile(event.target);
+        });
+}
 
-document.querySelector('[aria-labelledby="accessible-list-2"]')
-    .addEventListener("DOMNodeInserted", function (event) {
-        setToxicityInformationHome(event.target);
-        setToxicityInformationProfile(event.target);
-    });
+if (document
+    .querySelector('[aria-labelledby="accessible-list-2"]')) {
+    document.querySelector('[aria-labelledby="accessible-list-2"]')
+        .addEventListener("DOMNodeInserted", function (event) {
+            setToxicityInformationHome(event.target);
+            setToxicityInformationProfile(event.target);
+        });
+}
