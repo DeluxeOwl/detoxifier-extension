@@ -37,9 +37,8 @@ function createAlertElement(type, text) {
   return toxicityInformationDIV;
 }
 
-const badWords = ["bad", "difficult"];
-
 function setToxicityInformation(element) {
+  const badWords = ["bad", "difficult"];
   element.querySelectorAll('[role="article"]').forEach((element) => {
     let comments = element.getElementsByClassName(
       "css-901oao r-18jsvk2 r-1qd0xha r-a023e6 r-16dba41 r-ad9z0x r-bcqeeo r-bnwqim r-qvutc0"
