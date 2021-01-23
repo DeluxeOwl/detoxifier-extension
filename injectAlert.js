@@ -45,50 +45,32 @@ function setToxicityInformationHome(element) {
     );
     Array.prototype.forEach.call(comments, function (comment) {
       let commentText = comment.innerText || comment.textContent;
-      console.log(commentText);
+      // console.log(commentText);
 
-      // Should work
-      // let body = { text: [commentText] };
-      // fetch("https://72f6033cf875.ngrok.io/model/predict", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     accept: "application/json",
-      //   },
-      //   body: JSON.stringify(body),
-      // })
-      //   .then((res) => res.json())
-      //   .then((body) =>
-      //     element.parentElement.prepend(
-      //       createAlertElement(
-      //         "low",
-      //         JSON.stringify(body.results[0].predictions)
-      //       )
-      //     )
-      //   )
-      //   .catch((e) => console.log(e));
-
-      if (badWords.some((badWord) => commentText.includes(badWord))) {
-        element.parentElement.prepend(
-          createAlertElement(
-            "high",
-            "This tweet contains a high level of toxicity"
-          )
+      let body = { text: [commentText] };
+      fetch("https://72f6033cf875.ngrok.io/model/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          accept: "application/json",
+        },
+        body: JSON.stringify(body),
+      })
+        .then((res) => res.json())
+        .then((body) =>
+          // Uncomment this to append an element
+          // element.parentElement.prepend(
+          //   createAlertElement(
+          //     "low",
+          //     JSON.stringify(body.results[0].predictions)
+          //   )
+          // )
+          console.log(body.results[0].predictions)
+        )
+        .catch((e) =>
+          //Change this to say error
+          console.log(e)
         );
-        comment.setAttribute("style", "display: none;");
-
-        let button = document.createElement("button");
-        button.innerHTML = "Show comment";
-        button.addEventListener("click", function () {
-          comment.removeAttribute("style");
-        });
-
-        element.parentElement.prepend(button);
-      } else {
-        element.parentElement.prepend(
-          createAlertElement("low", "This tweet is low on toxicity")
-        );
-      }
     });
   });
 }
