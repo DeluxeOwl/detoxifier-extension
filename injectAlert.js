@@ -57,16 +57,12 @@ function setToxicityInformationHome(element) {
         body: JSON.stringify(body),
       })
         .then((res) => res.json())
-        .then((body) =>
-          // Uncomment this to append an element
-          // element.parentElement.prepend(
-          //   createAlertElement(
-          //     "low",
-          //     JSON.stringify(body.results[0].predictions)
-          //   )
-          // )
-          console.log(body.results[0].predictions)
-        )
+        .then((body) => {
+          element.parentElement.prepend(
+            createAlertElement("low", "Change this prediction, check console")
+          );
+          console.log(body.results[0].predictions);
+        })
         .catch((e) =>
           //Change this to say error
           console.log(e)
