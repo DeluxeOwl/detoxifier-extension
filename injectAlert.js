@@ -39,7 +39,7 @@ function createAlertElement(type, text) {
 }
 
 //
-let tweetParser = function (tweetDom) {
+function tweetParser(tweetDom) {
   let tweetContent = tweetDom.innerText;
   let tweet = {
     name: "",
@@ -95,7 +95,7 @@ function setToxicityInformation(element) {
             tweets.push(div)
             }
     } // Load Tweet Elements by checking for specific Attribute
-    
+    //console.log(tweets)
     if (tweets.length!==0){
       console.log(tweets)
     
@@ -123,19 +123,50 @@ function setToxicityInformation(element) {
           })
               .then((res) => res.json())
               .then((body) => {
-                  if (tweet.parentElement.parentElement.parentElement.parentElement.parentElement.children[0].getAttribute("id") === "toxicity-alert") {
-                      return;
-                  }
-                  tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(
-                      createAlertElement("low", "Change this prediction, check console")
-                  );
-                  console.log(body.results[0].predictions);
-              })
-              .catch((e) =>
-                  //Change this to say error
-                  console.log(e)
-              );
-          }
+                if (tweet.parentElement.parentElement.parentElement.parentElement.parentElement.children[0].getAttribute("id") === "toxicity-alert") {
+                    return;
+                }
+
+                let maximum = 0;
+                let type = "error";
+                let results = body.results[0].predictions;
+
+                for (const toxicity_type in results) {
+                    if (results[toxicity_type] > maximum) {
+                        maximum = results[toxicity_type];
+                        type = toxicity_type;
+                    }
+                }
+
+                if (maximum < 0.3) {
+                    tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(
+                        createAlertElement("low", "The following tweet is safe to read, enjoy!")
+                    );
+                } else if (maximum < 0.6) {
+                    tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(
+                        createAlertElement("medium", "The following tweet may disturb some, as it was identified as being " + type)
+                    );
+                } else {
+                    tweet.setAttribute("style", "display: none;");
+
+                    let button = document.createElement("button");
+                    button.innerHTML = "Show comment";
+                    button.addEventListener("click", function () {
+                        tweet.removeAttribute("style");
+                    });
+
+                    tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(button);
+
+                    tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(
+                        createAlertElement("high", "The following tweet may be very disturbing some, as it was identified as being strongly " + type)
+                    );
+                }
+            })
+            .catch((e) =>
+                // Change this to say error
+                console.log(e)
+            );
+        }
       });
     }
 }
@@ -297,8 +328,8 @@ function setToxicityInformationProfile(element) {
 }
 
 // We set the toxicity information for the whole document
-setToxicityInformationHome(document);
-setToxicityInformationProfile(document);
+//setToxicityInformationHome(document);
+//setToxicityInformationProfile(document);
 setToxicityInformation(document)
 
 
@@ -307,8 +338,8 @@ if (document
     document
         .querySelector('[aria-labelledby="accessible-list-0"]')
         .addEventListener("DOMNodeInserted", function (event) {
-            setToxicityInformationHome(event.target);
-            setToxicityInformationProfile(event.target);
+            //setToxicityInformationHome(event.target);
+            //setToxicityInformationProfile(event.target);
             setToxicityInformation(event.target);
         });
 }
@@ -317,8 +348,8 @@ if (document
     .querySelector('[aria-labelledby="accessible-list-2"]')) {
     document.querySelector('[aria-labelledby="accessible-list-2"]')
         .addEventListener("DOMNodeInserted", function (event) {
-            setToxicityInformationHome(event.target);
-            setToxicityInformationProfile(event.target);
+            //setToxicityInformationHome(event.target);
+            //setToxicityInformationProfile(event.target);
             setToxicityInformation(event.target);
         });
 }
