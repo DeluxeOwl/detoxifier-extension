@@ -12,3 +12,6 @@ function injectAlertIfRootAvailable() {
 }
 
 injectAlertIfRootAvailable();
+chrome.tabs.onUpdated.addListener(function () {
+    injectAlertIfRootAvailable();
+});
