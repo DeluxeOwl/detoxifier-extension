@@ -1,6 +1,7 @@
 // type can be low,medium,high,insane
 function createAlertElement(type, text) {
     let toxicityInformationDIV = document.createElement("div");
+    toxicityInformationDIV.setAttribute("id", "toxicity-alert");
 
     let colorMap = new Map();
     colorMap.set("low", "green");
@@ -58,6 +59,9 @@ function setToxicityInformationHome(element) {
             })
                 .then((res) => res.json())
                 .then((body) => {
+                    if (element.parentElement.children[0].getAttribute("id") === "toxicity-alert") {
+                        return;
+                    }
                     element.parentElement.prepend(
                         createAlertElement("low", "Change this prediction, check console")
                     );
@@ -79,7 +83,11 @@ function setToxicityInformationProfile(element) {
         )[4];
         Array.prototype.forEach.call(comments, function (comment) {
             let commentText = comment.innerText || comment.textContent;
-            console.log(commentText);
+            //console.log(commentText);
+
+            if (element.parentElement.children[0].getAttribute("id") === "toxicity-alert") {
+                return;
+            }
 
             if (badWords.some((badWord) => commentText.includes(badWord))) {
                 element.parentElement.prepend(
