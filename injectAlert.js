@@ -37,15 +37,39 @@ function createAlertElement(type, text) {
   return toxicityInformationDIV;
 }
 
+const badWords = ["bad", "difficult"];
+
 function setToxicityInformation(element) {
   element.querySelectorAll('[role="article"]').forEach((element) => {
-    let toxicityInformationDIV = createAlertElement("high", "some text here");
-
-    element.parentElement.prepend(toxicityInformationDIV);
-    element.parentElement.prepend(createAlertElement("low", "some here"));
-    element.parentElement.prepend(
-      createAlertElement("medium", "some more here")
+    let comments = element.getElementsByClassName(
+      "css-901oao r-18jsvk2 r-1qd0xha r-a023e6 r-16dba41 r-ad9z0x r-bcqeeo r-bnwqim r-qvutc0"
     );
+    Array.prototype.forEach.call(comments, function (comment) {
+      let commentText = comment.innerText || comment.textContent;
+      console.log(commentText);
+
+      if (badWords.some((badWord) => commentText.includes(badWord))) {
+        element.parentElement.prepend(
+          createAlertElement(
+            "high",
+            "This tweet contains a high level of toxicity"
+          )
+        );
+        comment.setAttribute("style", "display: none;");
+
+        let button = document.createElement("button");
+        button.innerHTML = "Show comment";
+        button.addEventListener("click", function () {
+          comment.removeAttribute("style");
+        });
+
+        element.parentElement.prepend(button);
+      } else {
+        element.parentElement.prepend(
+          createAlertElement("low", "This tweet is low on toxicity")
+        );
+      }
+    });
   });
 }
 
