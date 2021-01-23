@@ -1,7 +1,7 @@
 {
-  "name": "Getting Started Example",
+  "name": "Detoxitweet",
   "version": "1.0",
-  "description": "Build an Extension!",
+  "description": "A cleaner tweeter for a better experience!",
   "permissions": [
     "storage",
     "declarativeContent",
@@ -11,16 +11,17 @@
     "https://*/"
   ],
   "background": {
-    "scripts": ["background.js"],
+    "scripts": [
+      "background.js"
+    ],
     "persistent": false
   },
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "images/get_started16.png",
-      "32": "images/get_started32.png",
-      "48": "images/get_started48.png",
-      "128": "images/get_started128.png"
+      "16": "images/twitter_16.png",
+      "32": "images/twitter_32.png",
+      "128": "images/twitter_128.png"
     }
   },
   "content_scripts": [
@@ -29,14 +30,15 @@
         "*://twitter.com/*",
         "*://mobile.twitter.com/*"
       ],
-      "js": ["content.js"]
+      "js": [
+        "content.js"
+      ]
     }
   ],
   "icons": {
-    "16": "images/get_started16.png",
-    "32": "images/get_started32.png",
-    "48": "images/get_started48.png",
-    "128": "images/get_started128.png"
+    "16": "images/twitter_16.png",
+    "32": "images/twitter_32.png",
+    "128": "images/twitter_128.png"
   },
   "manifest_version": 2
 }
