@@ -77,7 +77,7 @@ setToxicityInformation(document);
 
 // We listen for newly added articles while scrolling twitter
 document
-  .querySelector('[aria-label="Timeline: Your Home Timeline"]')
+    .querySelector('[aria-label="Timeline: Your Home Timeline"]')
   .addEventListener("DOMNodeInserted", function (event) {
     setToxicityInformation(event.target);
   });
