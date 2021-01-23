@@ -38,6 +38,108 @@ function createAlertElement(type, text) {
   return toxicityInformationDIV;
 }
 
+//
+let tweetParser = function (tweetDom) {
+  let tweetContent = tweetDom.innerText;
+  let tweet = {
+    name: "",
+    username: "",
+    time: "",
+    content: "",
+    interaction: {
+      reply: "",
+      retweets: "",
+      like: "",
+    },
+  };
+  //console.log("Tweet Content", tweetContent)
+  let timeElm = tweetDom.getElementsByTagName("time")[0];
+  if (timeElm){
+  let timeDis = timeElm.innerText;
+  //console.log("Tweet Time Element ",timeElm)
+  let dateTimeAtri = timeElm.getAttribute("datetime");
+  let splitTweet = tweetContent.split(/\n/);
+  let splitLength = splitTweet.length;
+  let breakpoint = 4;
+  let endContent = splitLength - 4;
+  for (let i = 0; i < splitLength; i++) {
+    if (splitTweet[i] === timeDis) {
+      breakpoint = i;
+    }
+  }
+  //console.log("Split Tweet",splitTweet)
+  tweet.name = splitTweet[0];
+  tweet.username = splitTweet[1];
+  tweet.time = dateTimeAtri;
+  tweet.content = splitTweet.slice(breakpoint + 1, endContent + 1);
+  tweet.content = tweet.content.join("\n");
+  tweet.interaction.reply = splitTweet[endContent + 1];
+  tweet.interaction.retweets = splitTweet[endContent + 2];
+  tweet.interaction.like = splitTweet[endContent + 3];
+  //console.log(tweet)
+  return tweet;
+  }
+  else // no time
+  return null
+};
+
+function setToxicityInformation(element) {
+    const badWords = ["bad", "difficult"];
+    let tweetIds = []
+    let divs = element.querySelectorAll("div") // Load Div Elements
+    let tweets = []
+    for(let div of divs) {
+        let dataTestId = div.getAttribute("data-testid")
+        if(dataTestId == "tweet")
+            {
+            tweets.push(div)
+            }
+    } // Load Tweet Elements by checking for specific Attribute
+    
+    if (tweets.length!==0){
+      console.log(tweets)
+    
+      Array.prototype.forEach.call(tweets, function (tweet) {
+          console.log(tweet.textContent, tweet.innerText)
+          tweet_data = tweetParser(tweet);
+          if (tweet_data){
+            console.log("tweet_data", tweet_data)
+            let commentText = tweet_data.content
+            if (commentText.startsWith("Replying")){
+              commentText = tweet_data.interaction.reply
+            }
+            console.log("commentText", commentText);
+
+            let body = {text: [commentText]};
+          
+          
+          fetch("https://2701b40c710d.ngrok.io/model/predict", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+                  accept: "application/json",
+              },
+              body: JSON.stringify(body),
+          })
+              .then((res) => res.json())
+              .then((body) => {
+                  if (tweet.parentElement.parentElement.parentElement.parentElement.parentElement.children[0].getAttribute("id") === "toxicity-alert") {
+                      return;
+                  }
+                  tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(
+                      createAlertElement("low", "Change this prediction, check console")
+                  );
+                  console.log(body.results[0].predictions);
+              })
+              .catch((e) =>
+                  //Change this to say error
+                  console.log(e)
+              );
+          }
+      });
+    }
+}
+
 function setToxicityInformationHome(element) {
     // These are the classnames that differentiate the comments between the dark themes
     const differentClassnames = ["r-1fmj7o5", "r-jwli3a", "r-18jsvk2"];
@@ -62,7 +164,7 @@ function setToxicityInformationHome(element) {
 
         Array.prototype.forEach.call(comments, function (comment) {
             let commentText = comment.innerText || comment.textContent;
-            // console.log(commentText);
+            //console.log(commentText);
 
             let body = {text: [commentText]};
             fetch("https://2701b40c710d.ngrok.io/model/predict", {
@@ -197,21 +299,31 @@ function setToxicityInformationProfile(element) {
 // We set the toxicity information for the whole document
 setToxicityInformationHome(document);
 setToxicityInformationProfile(document);
+setToxicityInformation(document)
 
-if (document.querySelector('[aria-labelledby="accessible-list-0"]')) {
-  document
-    .querySelector('[aria-labelledby="accessible-list-0"]')
-    .addEventListener("DOMNodeInserted", function (event) {
-      setToxicityInformationHome(event.target);
-      setToxicityInformationProfile(event.target);
-    });
+
+if (document
+    .querySelector('[aria-labelledby="accessible-list-0"]')) {
+    document
+        .querySelector('[aria-labelledby="accessible-list-0"]')
+        .addEventListener("DOMNodeInserted", function (event) {
+            setToxicityInformationHome(event.target);
+            setToxicityInformationProfile(event.target);
+            setToxicityInformation(event.target);
+        });
 }
 
-if (document.querySelector('[aria-labelledby="accessible-list-2"]')) {
-  document
-    .querySelector('[aria-labelledby="accessible-list-2"]')
-    .addEventListener("DOMNodeInserted", function (event) {
-      setToxicityInformationHome(event.target);
-      setToxicityInformationProfile(event.target);
-    });
+if (document
+    .querySelector('[aria-labelledby="accessible-list-2"]')) {
+    document.querySelector('[aria-labelledby="accessible-list-2"]')
+        .addEventListener("DOMNodeInserted", function (event) {
+            setToxicityInformationHome(event.target);
+            setToxicityInformationProfile(event.target);
+            setToxicityInformation(event.target);
+        });
 }
+
+window.addEventListener("onhashchange", function(){
+    //url hash # has changed
+    console.log('url');
+});
