@@ -29,12 +29,17 @@ chrome.runtime.onMessage.addListener(
         }
     });
 
-chrome.tabs.onUpdated.addListener(function
-        (tabId, changeInfo, tab) {
-        // read changeInfo data and do something with it (like read the url)
-        if (changeInfo.url) {
-            console.log("Change registered");
+chrome.webNavigation.onHistoryStateUpdated.addListener(function
+    (event) {
+    // read changeInfo data and do something with it (like read the url)
+    console.log("Detected a url change!");
+    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+        chrome.tabs.insertCSS(tabs[0].id, {file: "tailwind.min.css"});
 
-        }
-    }
-);
+        chrome.tabs.executeScript(tabs[0].id, {
+            // code: 'document.body.style.backgroundColor = "' + color + '";',
+            file: "injectAlert.js",
+        });
+    });
+}, {url: [{hostEquals: 'twitter.com'}]});
+

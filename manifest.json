@@ -5,6 +5,7 @@
   "permissions": [
     "storage",
     "declarativeContent",
+    "webNavigation",
     "activeTab",
     "http://*/",
     "https://*/"
