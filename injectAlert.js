@@ -125,7 +125,8 @@ document
         setToxicityInformationProfile(event.target);
     });
 
-document.querySelector('[aria-labelledby="accessible-list-0"]').addEventListener("DOMNodeInserted", function (event) {
-    setToxicityInformationHome(event.target);
-    setToxicityInformationProfile(event.target);
-});
+document.querySelector('[aria-labelledby="accessible-list-2"]')
+    .addEventListener("DOMNodeInserted", function (event) {
+        setToxicityInformationHome(event.target);
+        setToxicityInformationProfile(event.target);
+    });
