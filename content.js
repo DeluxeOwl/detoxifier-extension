@@ -7,10 +7,8 @@ function injectAlertIfRootAvailable() {
         window.setTimeout(injectAlertIfRootAvailable, 500);
         return;
     }
-    if (root) {
-        chrome.runtime.sendMessage({message: "injectAlert"}, function (response) {
-        });
-    }
+    chrome.runtime.sendMessage({message: "injectAlert"}, function (response) {
+    });
 }
 
 injectAlertIfRootAvailable();

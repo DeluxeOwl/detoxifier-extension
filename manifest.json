@@ -25,7 +25,7 @@
   "content_scripts": [
     {
       "matches": [
-        "*://www.twitter.com/*",
+        "*://twitter.com/*",
         "*://mobile.twitter.com/*"
       ],
       "js": ["content.js"]
