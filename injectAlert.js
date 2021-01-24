@@ -191,11 +191,16 @@ function setToxicityInformation(element) {
                             accept: "application/json",
                         },
                         body: JSON.stringify(commentText),
-                    })
-                        .then((res) => res.json())
+                    }).then((res) => res.json())
                         .then((body) => {
 
-                            console.log(body);
+                            if (body["prediction"] === "fake") {
+                                tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(
+                                    createAlertElement(
+                                        "medium",
+                                        "The following tweet contains something that may be fake news. Consider reading a reliable source instead of this tweet. ")
+                                );
+                            }
 
                         })
                         .catch((e) =>
