@@ -28,11 +28,19 @@ changeColor.onclick = function (element) {
             chrome.storage.local.set({detoxifierOn: false}, function () {
                 console.log("The detoxifier is set to off.");
             });
+
+            chrome.tabs.getSelected(null, function(tab) {
+                chrome.tabs.reload(tab.id);
+            });
         } else {
             // else turn on
             svgPath.style.fill = "rgb(39, 167, 0)";
             chrome.storage.local.set({detoxifierOn: true}, function () {
                 console.log("The detoxifier is set to on.");
+            });
+
+            chrome.tabs.getSelected(null, function(tab) {
+                chrome.tabs.reload(tab.id);
             });
         }
     });

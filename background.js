@@ -15,16 +15,22 @@ chrome.runtime.onInstalled.addListener(function () {
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.message === "injectAlert") {
-        chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-            chrome.tabs.insertCSS(tabs[0].id, {file: "tailwind.min.css"});
+        chrome.storage.local.get(["detoxifierOn"], function (data) {
+            isTurnedOn = data["detoxifierOn"];
 
-            chrome.tabs.executeScript(tabs[0].id, {
-                // code: 'document.body.style.backgroundColor = "' + color + '";',
-                file: "injectAlert.js",
-            });
+            if (isTurnedOn) {
+                chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+                    chrome.tabs.insertCSS(tabs[0].id, {file: "tailwind.min.css"});
+
+                    chrome.tabs.executeScript(tabs[0].id, {
+                        // code: 'document.body.style.backgroundColor = "' + color + '";',
+                        file: "injectAlert.js",
+                    });
+                });
+
+                sendResponse({message: "OK"});
+            }
         });
-
-        sendResponse({message: "OK"});
     }
 });
 
