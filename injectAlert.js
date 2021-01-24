@@ -196,6 +196,13 @@ function setToxicityInformation(element) {
                         body: JSON.stringify(commentText),
                     }).then((res) => res.json())
                         .then((body) => {
+                            if (
+                                tweet.parentElement.parentElement.parentElement.parentElement.parentElement.children[0].getAttribute(
+                                    "id"
+                                ) === "fake-news-alert"
+                            ) {
+                                return;
+                            }
 
                             if (body["prediction"] === "fake") {
                                 tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(
