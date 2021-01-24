@@ -332,25 +332,9 @@ setToxicityInformation(document)
 
 
 if (document
-    .querySelector('[aria-labelledby="accessible-list-0"]')) {
+    .querySelector('[aria-labelledby^="accessible-list"]')) {
     document
-        .querySelector('[aria-labelledby="accessible-list-0"]')
-        .addEventListener("DOMNodeInserted", function (event) {
-            //setToxicityInformationHome(event.target);
-            //setToxicityInformationProfile(event.target);
-            setToxicityInformation(event.target);
-        });
-} else if (document
-    .querySelector('[aria-labelledby="accessible-list-1"]')) {
-    document.querySelector('[aria-labelledby="accessible-list-1"]')
-        .addEventListener("DOMNodeInserted", function (event) {
-            //setToxicityInformationHome(event.target);
-            //setToxicityInformationProfile(event.target);
-            setToxicityInformation(event.target);
-        });
-} else if (document
-    .querySelector('[aria-labelledby="accessible-list-2"]')) {
-    document.querySelector('[aria-labelledby="accessible-list-2"]')
+        .querySelector('[aria-labelledby^="accessible-list"]')
         .addEventListener("DOMNodeInserted", function (event) {
             //setToxicityInformationHome(event.target);
             //setToxicityInformationProfile(event.target);

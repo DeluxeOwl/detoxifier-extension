@@ -30,6 +30,9 @@ chrome.runtime.onMessage.addListener(
     });
 
 chrome.webNavigation.onHistoryStateUpdated.addListener(() => {
-    console.log("A change was detected");
-}, {pageUrl: {hostEquals: "twitter.com"}, });
+    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+        console.log("Try injection due to history change result; ");
+        chrome.tabs.sendMessage(tabs[0].id, {message: "inject-script"});
+    });
+}, {pageUrl: {hostEquals: "twitter.com"},});
 
