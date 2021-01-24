@@ -2,6 +2,7 @@
 Link https://devpost.com/software/detoxifier-just-a-better-twitter
 
 ## Architecture
+![f2a0fb596ef86676cabacfe8806091c0.png](:/504634117aef491599e573b7154aad5e)
 
 ## Frontend
 
