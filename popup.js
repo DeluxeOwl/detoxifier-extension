@@ -1,5 +1,14 @@
-let changeColor = document.getElementById("changeColor");
+let changeColor = document.getElementById("switch");
 
 changeColor.onclick = function (element) {
-    console.log("clicked");
+  let svgPath = document.getElementById("power-off-path");
+
+  let turnedOn = svgPath.style.fill === "rgb(39, 167, 0)" ? true : false;
+
+  // ... then turn off
+  if (turnedOn) {
+    svgPath.style.fill = "rgb(194, 39, 39)";
+  } else {
+    svgPath.style.fill = "rgb(39, 167, 0)";
+  }
 };
