@@ -2,7 +2,7 @@
 Link https://devpost.com/software/detoxifier-just-a-better-twitter
 
 ## Architecture
-![arch](https://github.com/DeluxeOwl/detoxifier-extension/hexcam.png)
+![arch](https://github.com/DeluxeOwl/detoxifier-extension/blob/main/hexcam.png)
 ## Frontend
 
 1. download this repo
