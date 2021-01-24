@@ -1,7 +1,7 @@
 // type can be low,medium,high,insane
-function createAlertElement(type, text) {
+function createAlertElement(type, text, id) {
     let toxicityInformationDIV = document.createElement("div");
-    toxicityInformationDIV.setAttribute("id", "toxicity-alert");
+    toxicityInformationDIV.setAttribute("id", id);
 
     let colorMap = new Map();
     colorMap.set("low", "green");
@@ -129,7 +129,8 @@ function setToxicityInformation(element) {
                             tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(
                                 createAlertElement(
                                     "low",
-                                    "The following tweet is safe to read!"
+                                    "The following tweet is safe to read!",
+                                    "toxicity-alert"
                                 )
                             );
                         } else if (maximum < 0.85) {
@@ -137,7 +138,8 @@ function setToxicityInformation(element) {
                                 createAlertElement(
                                     "medium",
                                     "The following tweet may disturb some, as it was identified as being " +
-                                    type
+                                    type,
+                                    "toxicity-alert"
                                 )
                             );
                         } else {
@@ -171,7 +173,8 @@ function setToxicityInformation(element) {
                                 createAlertElement(
                                     "high",
                                     "The following tweet may be very disturbing to most, as it was identified as being strongly " +
-                                    type
+                                    type,
+                                    "toxicity-alert"
                                 )
                             );
                         }
@@ -198,7 +201,8 @@ function setToxicityInformation(element) {
                                 tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(
                                     createAlertElement(
                                         "medium",
-                                        "The following tweet contains something that may be fake news. Consider reading a reliable source instead of this tweet. ")
+                                        "The following tweet contains something that may be fake news. Consider reading a reliable source instead of this tweet. ",
+                                        "fake-news-alert")
                                 );
                             }
 
