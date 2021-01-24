@@ -125,14 +125,14 @@ function setToxicityInformation(element) {
               }
             }
 
-            if (maximum < 0.3) {
+            if (maximum < 0.45) {
               tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(
                 createAlertElement(
                   "low",
                   "The following tweet is safe to read, enjoy!"
                 )
               );
-            } else if (maximum < 0.6) {
+            } else if (maximum < 0.85) {
               tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(
                 createAlertElement(
                   "medium",
@@ -147,8 +147,20 @@ function setToxicityInformation(element) {
               let buttonClassList = ["bg-blue-500", "text-gray-50"];
               button.classList.add(...buttonClassList);
               button.innerHTML = "Show comment";
+              button.classList.add("on");
               button.addEventListener("click", function () {
-                tweet.removeAttribute("style");
+                if (button.classList.contains("on")) {
+                  tweet.removeAttribute("style");
+                  button.innerHTML = "Hide comment";
+                  button.classList.remove("on");
+                  button.classList.add("off");
+                } else {
+                  tweet.setAttribute("style", "display: none;");
+                  button.innerHTML = "Show comment";
+                  button.classList.remove("off");
+                  button.classList.add("on");
+                }
+
               });
 
               tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(
