@@ -180,6 +180,31 @@ function setToxicityInformation(element) {
                         // Change this to say error
                         console.log(e)
                     );
+
+
+                // Check if it is fake news
+                if (commentText.length > 25) {
+                    url = "https://detoxifier-server.herokuapp.com/post/" + commentText;
+                    console.log(url);
+
+                    fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            accept: "application/json",
+                        },
+                    })
+                        .then((res) => res.json())
+                        .then((body) => {
+
+                            console.log(body);
+
+                        })
+                        .catch((e) =>
+                            // Change this to say error
+                            console.log(e)
+                        );
+                }
             }
         });
     }
