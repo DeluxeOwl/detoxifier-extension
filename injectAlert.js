@@ -104,7 +104,7 @@ function setToxicityInformation(element) {
                 let body = {text: [commentText]};
 
 
-                fetch("https://2701b40c710d.ngrok.io/model/predict", {
+                fetch("https://46ed3d4095f5.ngrok.io/model/predict", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
