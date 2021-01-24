@@ -5,8 +5,9 @@ function createAlertElement(type, text, id) {
 
     let colorMap = new Map();
     colorMap.set("low", "green");
-    colorMap.set("medium", "yellow");
+    colorMap.set("medium", "pink");
     colorMap.set("high", "red");
+    colorMap.set("clickbait", "yellow")
 
     let divClasses = ["p-4", "border-l-4"];
 
@@ -204,11 +205,27 @@ function setToxicityInformation(element) {
                                 return;
                             }
 
-                            if (body["prediction"] === "fake") {
+                            if (body["prediction"] === "clickbait and probably fake") {
+                                tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(
+                                    createAlertElement(
+                                        "medium",
+                                        "The following tweet is clickbait and contains something that may be fake news. Consider reading a reliable source instead of this tweet. ",
+                                        "fake-news-alert")
+                                );
+                            }
+                            if (body["prediction"] === "probably fake") {
                                 tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(
                                     createAlertElement(
                                         "medium",
                                         "The following tweet contains something that may be fake news. Consider reading a reliable source instead of this tweet. ",
+                                        "fake-news-alert")
+                                );
+                            }
+                            if (body["prediction"] === "clickbait") {
+                                tweet.parentElement.parentElement.parentElement.parentElement.parentElement.prepend(
+                                    createAlertElement(
+                                        "clickbait",
+                                        "The following tweet is clickbait.",
                                         "fake-news-alert")
                                 );
                             }
