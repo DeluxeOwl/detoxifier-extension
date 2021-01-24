@@ -184,15 +184,13 @@ function setToxicityInformation(element) {
 
                 // Check if it is fake news
                 if (commentText.length > 25) {
-                    url = "https://detoxifier-server.herokuapp.com/post/" + commentText;
-                    console.log(url);
-
-                    fetch(url, {
+                    fetch("https://detoxifier-server.herokuapp.com/post/", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                             accept: "application/json",
                         },
+                        body: JSON.stringify(commentText),
                     })
                         .then((res) => res.json())
                         .then((body) => {
@@ -211,8 +209,6 @@ function setToxicityInformation(element) {
 }
 
 // We set the toxicity information for the whole document
-//setToxicityInformationHome(document);
-//setToxicityInformationProfile(document);
 setToxicityInformation(document);
 
 if (document.querySelector('[aria-labelledby^="accessible-list"]')) {
