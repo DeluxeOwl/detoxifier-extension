@@ -52,11 +52,11 @@ function tweetParser(tweetDom) {
             like: "",
         },
     };
-    //console.log("Tweet Content", tweetContent)
+
     let timeElm = tweetDom.getElementsByTagName("time")[0];
     if (timeElm) {
         let timeDis = timeElm.innerText;
-        //console.log("Tweet Time Element ",timeElm)
+
         let dateTimeAtri = timeElm.getAttribute("datetime");
         let splitTweet = tweetContent.split(/\n/);
         let splitLength = splitTweet.length;
@@ -67,7 +67,7 @@ function tweetParser(tweetDom) {
                 breakpoint = i;
             }
         }
-        //console.log("Split Tweet",splitTweet)
+
         tweet.name = splitTweet[0];
         tweet.username = splitTweet[1];
         tweet.time = dateTimeAtri;
@@ -76,14 +76,12 @@ function tweetParser(tweetDom) {
         tweet.interaction.reply = splitTweet[endContent + 1];
         tweet.interaction.retweets = splitTweet[endContent + 2];
         tweet.interaction.like = splitTweet[endContent + 3];
-        //console.log(tweet)
         return tweet;
     } else // no time
         return null
-};
+}
 
 function setToxicityInformation(element) {
-    const badWords = ["bad", "difficult"];
     let tweetIds = []
     let divs = element.querySelectorAll("div") // Load Div Elements
     let tweets = []
@@ -93,20 +91,15 @@ function setToxicityInformation(element) {
             tweets.push(div)
         }
     } // Load Tweet Elements by checking for specific Attribute
-    //console.log(tweets)
     if (tweets.length !== 0) {
-        console.log(tweets)
 
         Array.prototype.forEach.call(tweets, function (tweet) {
-            console.log(tweet.textContent, tweet.innerText)
             tweet_data = tweetParser(tweet);
             if (tweet_data) {
-                console.log("tweet_data", tweet_data)
                 let commentText = tweet_data.content
                 if (commentText.startsWith("Replying")) {
                     commentText = tweet_data.interaction.reply
                 }
-                console.log("commentText", commentText);
 
                 let body = {text: [commentText]};
 
@@ -167,162 +160,6 @@ function setToxicityInformation(element) {
             }
         });
     }
-}
-
-function setToxicityInformationHome(element) {
-    // These are the classnames that differentiate the comments between the dark themes
-    const differentClassnames = ["r-1fmj7o5", "r-jwli3a", "r-18jsvk2"];
-    // This one is consistent between themes
-    const baseClasename =
-        "css-901oao r-1qd0xha r-a023e6 r-16dba41 r-ad9z0x r-bcqeeo r-bnwqim r-qvutc0";
-
-    element.querySelectorAll('[role="article"]').forEach((element) => {
-        if (element.parentElement.children[0].getAttribute("id") === "toxicity-alert") {
-            return;
-        }
-
-        let comments = [];
-        for (let diffClass of differentClassnames) {
-            comments = element.getElementsByClassName(
-                baseClasename + " " + diffClass
-            );
-            if (comments.length !== 0) {
-                break;
-            }
-        }
-
-        Array.prototype.forEach.call(comments, function (comment) {
-            let commentText = comment.innerText || comment.textContent;
-            //console.log(commentText);
-
-            let body = {text: [commentText]};
-            fetch("https://2701b40c710d.ngrok.io/model/predict", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    accept: "application/json",
-                },
-                body: JSON.stringify(body),
-            })
-                .then((res) => res.json())
-                .then((body) => {
-                    if (element.parentElement.children[0].getAttribute("id") === "toxicity-alert") {
-                        return;
-                    }
-
-                    let maximum = 0;
-                    let type = "error";
-                    let results = body.results[0].predictions;
-
-                    for (const toxicity_type in results) {
-                        if (results[toxicity_type] > maximum) {
-                            maximum = results[toxicity_type];
-                            type = toxicity_type;
-                        }
-                    }
-
-                    if (maximum < 0.3) {
-                        element.parentElement.prepend(
-                            createAlertElement("low", "The following tweet is safe to read, enjoy!")
-                        );
-                    } else if (maximum < 0.6) {
-                        element.parentElement.prepend(
-                            createAlertElement("medium", "The following tweet may disturb some, as it was identified as being " + type)
-                        );
-                    } else {
-                        comment.setAttribute("style", "display: none;");
-
-                        let button = document.createElement("button");
-                        button.innerHTML = "Show comment";
-                        button.addEventListener("click", function () {
-                            comment.removeAttribute("style");
-                        });
-
-                        element.parentElement.prepend(button);
-
-                        element.parentElement.prepend(
-                            createAlertElement("high", "The following tweet may be very disturbing some, as it was identified as being strongly " + type)
-                        );
-                    }
-                })
-                .catch((e) =>
-                    // Change this to say error
-                    console.log(e)
-                );
-        });
-    });
-}
-
-function setToxicityInformationProfile(element) {
-    element.querySelectorAll('[role="article"]').forEach((element) => {
-        if (element.parentElement.children[0].getAttribute("id") === "toxicity-alert") {
-            return;
-        }
-
-        let comments = element.getElementsByClassName(
-            "css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0"
-        )[4];
-
-        Array.prototype.forEach.call(comments, function (comment) {
-            let commentText = comment.innerText || comment.textContent;
-            //console.log(commentText);
-
-            let body = {text: [commentText]};
-            fetch("https://2701b40c710d.ngrok.io/model/predict", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    accept: "application/json",
-                },
-                body: JSON.stringify(body),
-            })
-                .then((res) => res.json())
-                .then((body) => {
-                    if (element.parentElement.children[0].getAttribute("id") === "toxicity-alert") {
-                        return;
-                    }
-
-                    let maximum = 0;
-                    let type = "error";
-                    let results = body.results[0].predictions;
-
-                    for (const toxicity_type in results) {
-                        if (results[toxicity_type] > maximum) {
-                            maximum = results[toxicity_type];
-                            type = toxicity_type;
-                        }
-                    }
-
-                    if (maximum < 0.3) {
-                        element.parentElement.prepend(
-                            createAlertElement("low", "The following tweet is safe to read, enjoy!")
-                        );
-                    } else if (maximum < 0.6) {
-                        element.parentElement.prepend(
-                            createAlertElement("medium", "The following tweet may disturb some, as it was identified as being " + type)
-                        );
-                    } else {
-                        comment.setAttribute("style", "display: none;");
-
-                        let button = document.createElement("button");
-                        button.innerHTML = "Show comment";
-                        button.addEventListener("click", function () {
-                            comment.removeAttribute("style");
-                        });
-
-                        element.parentElement.prepend(button);
-
-                        element.parentElement.prepend(
-                            createAlertElement("high", "The following tweet may be very disturbing some, as it was identified as being strongly " + type)
-                        );
-                    }
-                })
-                .catch((e) =>
-                    // Change this to say error
-                    console.log(e)
-                );
-        });
-    });
 }
 
 // We set the toxicity information for the whole document
