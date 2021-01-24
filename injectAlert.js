@@ -144,6 +144,8 @@ function setToxicityInformation(element) {
               tweet.setAttribute("style", "display: none;");
 
               let button = document.createElement("button");
+              let buttonClassList = ["bg-blue-500", "text-gray-50"];
+              button.classList.add(...buttonClassList);
               button.innerHTML = "Show comment";
               button.addEventListener("click", function () {
                 tweet.removeAttribute("style");
